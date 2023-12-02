@@ -40,7 +40,7 @@ namespace Zabota.Controllers
         public JsonResult PostTicket(Ticket ticket)
         {
             Tickets.Post(ticket);
-            return new JsonResult(Tickets.GetAll());
+            return new JsonResult(ticket.Id);
         }
 
         [Route("ticket")]
