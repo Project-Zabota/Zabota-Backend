@@ -12,6 +12,7 @@ namespace Zabota.Controllers
         private IBaseRepository<Ticket> Tickets { get; set; }
         private IBaseRepository<Message> Messages{ get; set; }
         private AppContext _appContext;
+        private static readonly HttpClient client = new HttpClient();
 
         public ApiController(IBaseRepository<Ticket> Ticket, IBaseRepository<Message> messages, AppContext appContext)
         {
@@ -90,9 +91,11 @@ namespace Zabota.Controllers
         [HttpPost]
         public IResult PostMessage(Message message)
         {
+            
             var ticket = Tickets.Get(message.TicketId);
             if (ticket != null)
             {
+                var response = client.PostAsync("http://localhost:5000/update", JsonContent.Create("{ticket: " + ticket.Id + ",action: “NEW_MESSAGE”,data: {text: " + message.Text + "}}"));
                 message.Ticket = ticket;
                 Messages.Post(message);
                 return Results.Json("ОК");
