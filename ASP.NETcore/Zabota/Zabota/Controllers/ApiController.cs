@@ -55,7 +55,7 @@ namespace Zabota.Controllers
             return Results.NotFound(new {message = "Заявка не найдена"});
         }
 
-        [Route("ticket")]
+        [Route("ticket/{id:int}")]
         [HttpDelete]
         public IResult DeleteTicket(int id)
         {
