@@ -37,7 +37,7 @@ namespace Zabota.Repositories.Implimentations
             {
                 toUpdate = model;
             }
-            Context.Update(toUpdate);
+            Context.Set<TDbModel>().Update(toUpdate);
             Context.SaveChanges();
             return toUpdate;
         }

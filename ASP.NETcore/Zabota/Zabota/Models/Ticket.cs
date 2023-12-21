@@ -8,5 +8,5 @@ public class Ticket : BaseModel
     public string? Type { get; set; }//{ Problem, Question, Suggestion, Feedback }
     public string? Sender { get; set; }//{ Client, Employee }
     public int Priority { get; set; }
-    public virtual List<Message> Messages { get; set; } = new();
+    public virtual List<Message>? Messages { get; set; } = new();
 }

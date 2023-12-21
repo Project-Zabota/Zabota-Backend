@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 using Zabota.Repositories.Interfaces;
+using Zabota.Services;
 
 namespace Zabota.Controllers
 {
@@ -9,98 +11,69 @@ namespace Zabota.Controllers
     [ApiController]
     public class ApiController : ControllerBase
     {
-        private IBaseRepository<Ticket> Tickets { get; set; }
-        private IBaseRepository<Message> Messages{ get; set; }
-        private AppContext _appContext;
-        private static readonly HttpClient client = new HttpClient();
+        private TicketService _TicketService { get; set; }
+        private MessageService _MessageService { get; set; }
 
-        public ApiController(IBaseRepository<Ticket> Ticket, IBaseRepository<Message> messages, AppContext appContext)
+        public ApiController(IBaseRepository<Ticket> tickets, IBaseRepository<Message> messages, AppContext appContext)
         {
-            Tickets = Ticket;
-            Messages = messages;
-            _appContext = appContext;
+            _TicketService = new TicketService(tickets, appContext);
+            _MessageService = new MessageService(tickets, messages, appContext);
         }
 
         [Route("ticket")]
         [HttpGet]
         public JsonResult GetAllTickets()
         {
-            return new JsonResult(Tickets.GetAll());
+            return _TicketService.GetAllTickets();
         }
 
         [Route("ticket/{id:int}")]
         [HttpGet]
         public JsonResult GetTicket(int id)
         {
-            return new JsonResult(Tickets.Get(id));
+            return _TicketService.GetTicket(id);
         }
 
         [Route("ticket")]
         [HttpPost]
         public JsonResult PostTicket(Ticket ticket)
         {
-            Tickets.Post(ticket);
-            return new JsonResult(ticket.Id);
+            return _TicketService.PostTicket(ticket);
         }
 
         [Route("ticket")]
         [HttpPut]
         public IResult PutTicket(Ticket ticketData)
         {
-            var ticket = Tickets.Get(ticketData.Id);
-            if (ticket != null)
-            {
-                return Results.Json(Tickets.Put(ticket));
-            }
-            return Results.NotFound(new {message = "Заявка не найдена"});
+            return _TicketService.PutTicket(ticketData);
         }
 
         [Route("ticket/{id:int}")]
         [HttpDelete]
         public IResult DeleteTicket(int id)
         {
-            var ticket = Tickets.Get(id);
-            if (ticket != null)
-            {
-                Tickets.Delete(id);
-                return Results.Json(new { message = "Заявка успешно удалена" });
-            }
-            return Results.NotFound(new { message = "Заявка не найдена" });
+            return _TicketService.DeleteTicket(id);
         }
 
         [Route("ticket/message/{id:int}")]
         [HttpGet]
         public JsonResult GetMessage(int id)
         {
-            return new JsonResult(Messages.Get(id));
+            return _MessageService.GetMessage(id);
         }
 
         [Route("ticket/{id:int}/message")]
         [HttpGet]
         public IResult GetAllMessagesByTicket(int id)
         {
-            var ticket = Tickets.Get(id);
-            if (ticket != null)
-            {
-                return Results.Json(_appContext.Tickets.Include(m => m.Messages).Where(m => m.Id == id).First());
-            }
-            return Results.NotFound(new { message = "Заявка не найдена" });
+            return _MessageService.GetAllMessagesByTicket(id);
         }
 
         [Route("ticket/message")]
         [HttpPost]
         public IResult PostMessage(Message message)
         {
-            
-            var ticket = Tickets.Get(message.TicketId);
-            if (ticket != null)
-            {
-                var response = client.PostAsync("http://localhost:5000/update", JsonContent.Create("{ticket: " + ticket.Id + ",action: “NEW_MESSAGE”,data: {text: " + message.Text + "}}"));
-                message.Ticket = ticket;
-                Messages.Post(message);
-                return Results.Json("ОК");
-            }
-            return Results.NotFound(new { message = "Заявка не найдена" });
+            return _MessageService.PostMessage(message);
         }
     }
 }
