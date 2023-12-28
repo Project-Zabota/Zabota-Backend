@@ -10,5 +10,13 @@ public class Message : BaseModel
     [JsonIgnore]
 //    [ForeignKey("TicketId")]
     public Ticket? Ticket { get; set; }
+    //public Message(MessageDTO messageDTO)
+    //{
+    //    Sender = messageDTO.Sender;
+    //    Text = messageDTO.Text;
+    //    TicketId = messageDTO.TicketId;
+    //    Ticket = messageDTO.Ticket;
+    //    Timestamp = DateTime.Now.ToString();
+    //}
 }
 

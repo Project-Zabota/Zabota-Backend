@@ -8,14 +8,19 @@ namespace Zabota.Services
     {
         private IBaseRepository<Ticket> _Tickets { get; set; }
         private AppContext _appContext;
-        public TicketService(IBaseRepository<Ticket> ticketRepository, AppContext appContext)
+        public TicketService(IBaseRepository<Ticket> tickets, AppContext appContext)
         {
-            _Tickets = ticketRepository;
+            //_Tickets = ticketsDTO.GetAll().ConvertAll(new Converter<TicketDTO, Ticket>(TicketDTOToTicket));
+            _Tickets = tickets;
             _appContext = appContext;
         }
-        public JsonResult GetAllTickets()
+        private static Ticket TicketDTOToTicket(TicketDTO ticketDTO)
         {
-            return new JsonResult(_Tickets.GetAll());
+            return new Ticket(ticketDTO);
+        }
+        public List<Ticket> GetAllTickets()
+        {
+            return _Tickets.GetAll();
         }
 
         public JsonResult GetTicket(int id)
@@ -29,9 +34,8 @@ namespace Zabota.Services
             return new JsonResult(ticket.Id);
         }
 
-        public IResult PutTicket(Ticket ticketData)
+        public IResult PutTicket(Ticket ticket)
         {
-            var ticket = _Tickets.Get(ticketData.Id);
             if (ticket != null)
             {
                 return Results.Json(_Tickets.Put(ticket));

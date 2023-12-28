@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
 using Zabota.Repositories.Interfaces;
 using Zabota.Services;
+using Zabota.Models;
 
 namespace Zabota.Controllers
 {
@@ -22,7 +23,7 @@ namespace Zabota.Controllers
 
         [Route("ticket")]
         [HttpGet]
-        public JsonResult GetAllTickets()
+        public List<Ticket> GetAllTickets()
         {
             return _TicketService.GetAllTickets();
         }
