@@ -10,13 +10,11 @@ namespace Zabota.Services
     {
         private IBaseRepository<Ticket> _Tickets { get; set; }
         private IBaseRepository<Message> _Messages { get; set; }
-        private AppContext _appContext;
         private static readonly HttpClient _Client = new HttpClient();
 
-        public MessageService(IBaseRepository<Ticket> ticketRepository, IBaseRepository<Message> messages, AppContext appContext)
+        public MessageService(IBaseRepository<Ticket> ticketRepository, IBaseRepository<Message> messages)
         {
             _Tickets = ticketRepository;
-            _appContext = appContext;
             _Messages = messages;
         }
 

@@ -6,6 +6,7 @@ using Zabota.Mapper;
 using Zabota.Models;
 using Zabota.Repositories.Implimentations;
 using Zabota.Repositories.Interfaces;
+using Zabota.Services;
 
 // TODO обернуть бы это всё в класс, чтобы красивеее было
 
@@ -41,6 +42,9 @@ builder.Services.AddControllers();
 builder.Services.AddTransient<IBaseRepository<Ticket>, BaseRepository<Ticket>>();
 builder.Services.AddTransient<IBaseRepository<Message>, BaseRepository<Message>>();
 builder.Services.AddTransient<IBaseRepository<User>, BaseRepository<User>>();
+
+builder.Services.AddTransient<TicketService, TicketService>();
+builder.Services.AddTransient<MessageService, MessageService>();
 
 builder.Services.AddTransient<IMapper<Sender, SenderDto>, SenderMapper>();
 builder.Services.AddTransient<IMapper<Message, MessageDto>, MessageMapper>();

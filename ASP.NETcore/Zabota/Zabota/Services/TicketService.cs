@@ -12,7 +12,7 @@ namespace Zabota.Services
         private AppContext _appContext;
         public TicketService(IBaseRepository<Ticket> tickets, AppContext appContext)
         {
-            //_Tickets = ticketsDTO.GetAll().ConvertAll(new Converter<TicketDTO, Ticket>(TicketDTOToTicket));
+            // _Tickets = ticketsDTO.GetAll().ConvertAll(new Converter<TicketDTO, Ticket>(TicketDTOToTicket));
             _Tickets = tickets;
             _appContext = appContext;
         }
