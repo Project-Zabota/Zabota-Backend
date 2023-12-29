@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Zabota.Dtos;
+using Zabota.Mapper;
 using Zabota.Models;
 using Zabota.Repositories.Implimentations;
 using Zabota.Repositories.Interfaces;
+
+// TODO обернуть бы это всё в класс, чтобы красивеее было
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,11 +37,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddDbContext<AppContext>(options => options.UseNpgsql(connection));
 builder.Services.AddControllers();
+
 builder.Services.AddTransient<IBaseRepository<Ticket>, BaseRepository<Ticket>>();
 builder.Services.AddTransient<IBaseRepository<Message>, BaseRepository<Message>>();
 builder.Services.AddTransient<IBaseRepository<User>, BaseRepository<User>>();
 
-
+builder.Services.AddTransient<IMapper<Sender, SenderDto>, SenderMapper>();
+builder.Services.AddTransient<IMapper<Message, MessageDto>, MessageMapper>();
+builder.Services.AddTransient<IMapper<Ticket, TicketDto>, TicketMapper>();
+builder.Services.AddTransient<IMapper<User, UserDto>, UserMapper>();
 
 var app = builder.Build();
 

@@ -5,13 +5,22 @@ namespace Zabota.Mapper;
 
 public class MessageMapper : IMapper<Message, MessageDto>
 {
-    public MessageDto ToDto(Message model)
+    private readonly IMapper<Sender, SenderDto> _senderMapper;
+
+    public MessageMapper(IMapper<Sender, SenderDto> senderMapper)
     {
-        return new MessageDto();
+        _senderMapper = senderMapper;
     }
 
-    public Message ToModel(MessageDto model)
+    public MessageDto ToDto(Message model)
     {
-        throw new NotImplementedException();
+        var sender = _senderMapper.ToDto(model.Sender);
+        return new MessageDto(model.Id, model.TicketId, model.Text, sender, DateTime.Parse(model.Timestamp));
+    }
+
+    public Message ToModel(MessageDto dto)
+    {
+        var sender = _senderMapper.ToModel(dto.Sender);
+        return new Message(dto.Text, sender, dto.Timestamp, dto.TicketId);
     }
 }

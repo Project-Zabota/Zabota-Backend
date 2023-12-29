@@ -13,5 +13,10 @@ public class Sender : BaseModel
         Name = name;
         Type = type;
     }
+    
+    public Sender(string name, SenderType type, User? user) : this(name, type)
+    {
+        User = user;
+    }
 
 }

@@ -1,17 +1,28 @@
-using NuGet.Protocol.Plugins;
 using Zabota.Dtos;
+using Zabota.Models;
 
 namespace Zabota.Mapper;
 
 public class SenderMapper : IMapper<Sender, SenderDto>
 {
-    public SenderDto ToDto(Sender model)
+    private readonly IMapper<User, UserDto> _userMapper;
+
+    public SenderMapper(IMapper<User, UserDto> userMapper)
     {
-        throw new NotImplementedException();
+        _userMapper = userMapper;
     }
 
-    public Sender ToModel(SenderDto model)
+    public SenderDto ToDto(Sender model)
     {
-        throw new NotImplementedException();
+        return new SenderDto(model.Name, model.Type);
+    }
+
+    public Sender ToModel(SenderDto dto)
+    {
+        var user = dto.User == null
+            ? null
+            : _userMapper.ToModel(dto.User);
+        
+        return new Sender(dto.Name, dto.Type, user);
     }
 }

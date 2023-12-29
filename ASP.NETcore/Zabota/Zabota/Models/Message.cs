@@ -14,12 +14,11 @@ public class Message : BaseModel
 
     public Message() { }
 
-    public Message(string text, Sender sender, DateTime timestamp, int ticketId, Ticket? ticket)
+    public Message(string text, Sender sender, DateTime timestamp, int ticketId)
     {
         Text = text;
         Sender = sender;
         Timestamp = timestamp.ToString(CultureInfo.CurrentCulture);
         TicketId = ticketId;
-        Ticket = ticket;
     }
 }
