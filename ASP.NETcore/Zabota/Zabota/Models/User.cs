@@ -2,15 +2,17 @@
 {
     public class User : BaseModel
     {
-        public string UserName { get; set; }
-        public string Login { get; set; }
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
 
-        public User(string userName, string login, string email, string password)
+        public User(string firstName, string middleName, string lastName, string login, string email, string password)
         {
-            UserName = userName;
-            Login = login;
+            FirstName = firstName;
+            MiddleName = middleName;
+            LastName = lastName;
             Email = email;
             Password = password;
         }
