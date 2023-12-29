@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol;
+﻿using Microsoft.AspNetCore.Mvc;
+using Zabota.Models;
 using Zabota.Repositories.Interfaces;
 using Zabota.Services;
-using Zabota.Models;
 
 namespace Zabota.Controllers
 {

@@ -1,5 +1,5 @@
-﻿using Zabota.Repositories.Interfaces;
-using Zabota.Models;
+﻿using Zabota.Models;
+using Zabota.Repositories.Interfaces;
 
 namespace Zabota.Services
 {

@@ -7,7 +7,7 @@ public class MessageMapper : IMapper<Message, MessageDto>
 {
     public MessageDto ToDto(Message model)
     {
-        throw new NotImplementedException();
+        return new MessageDto();
     }
 
     public Message ToModel(MessageDto model)

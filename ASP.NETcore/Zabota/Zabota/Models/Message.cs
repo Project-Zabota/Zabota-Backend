@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
-using Zabota.Models.Enums;
+﻿using System.Globalization;
 
 namespace Zabota.Models;
 

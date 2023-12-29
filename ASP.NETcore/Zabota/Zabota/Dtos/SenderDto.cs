@@ -1,17 +1,15 @@
 using Zabota.Models.Enums;
 
-namespace Zabota.Models;
+namespace Zabota.Dtos;
 
-public class Sender : BaseModel
+public class SenderDto
 {
     public string Name { get; set; }
     public SenderType Type { get; set; }
-    public User? User { get; set; }
 
-    public Sender(string name, SenderType type)
+    public SenderDto(string name, SenderType type)
     {
         Name = name;
         Type = type;
     }
-
 }

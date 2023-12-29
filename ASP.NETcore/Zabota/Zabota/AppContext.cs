@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Zabota.Models;
-using Zabota.Models.Enums;
 
 public class AppContext : DbContext
 {

@@ -41,7 +41,7 @@ namespace Zabota.Services
             var ticket = _Tickets.Get(message.TicketId);
             if (ticket != null)
             {
-                if (message.Sender.Type.Equals(Sender.SenderType.EMPOLYEE_ZABOTA))
+                if (message.Sender.Type.Equals(SenderType.EMPOLYEE_ZABOTA))
                 {
                     var response = _Client.PostAsync("http://localhost:5000/update", JsonContent.Create("{\"ticket\": " + ticket.Id + ",\"action\": \"NEW_MESSAGE\",\"data\": {\"text\": \"" + message.Text + "\"}}"));
                 }
