@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Mvc;
+using Zabota.Models;
+using Zabota.Models.Enums;
 using Zabota.Repositories.Interfaces;
 
 namespace Zabota.Services
@@ -34,16 +37,16 @@ namespace Zabota.Services
 
         public IResult PostMessage(Message message)
         {
-
+            
             var ticket = _Tickets.Get(message.TicketId);
             if (ticket != null)
             {
-                if (message.Sender == "employee")
+                if (message.Sender.Type.Equals(Sender.SenderType.EMPOLYEE_ZABOTA))
                 {
                     var response = _Client.PostAsync("http://localhost:5000/update", JsonContent.Create("{\"ticket\": " + ticket.Id + ",\"action\": \"NEW_MESSAGE\",\"data\": {\"text\": \"" + message.Text + "\"}}"));
                 }
                 message.Ticket = ticket;
-                message.Timestamp = DateTime.Now.ToString();
+                message.Timestamp = DateTime.Now.ToString(CultureInfo.InvariantCulture);
                 _Messages.Post(message);
                 return Results.Json("ОК");
             }

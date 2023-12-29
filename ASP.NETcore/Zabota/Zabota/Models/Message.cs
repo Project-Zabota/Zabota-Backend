@@ -1,22 +1,27 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
-using Zabota.Models;
+using System.Globalization;
+using Zabota.Models.Enums;
+
+namespace Zabota.Models;
+
 public class Message : BaseModel
 {
-    public string? Sender { get; set; } //{ Client, Employee }
-    public string? Text { get; set; }
-    public string? Timestamp { get; set; }
+    public string Text { get; set; }
+    public Sender Sender { get; set; }
+    // у меня не получилось использовать тут DateTime, поэтому string
+    public string Timestamp { get; set; }
+    
     public int TicketId { get; set; }
-    [JsonIgnore]
-//    [ForeignKey("TicketId")]
     public Ticket? Ticket { get; set; }
-    //public Message(MessageDTO messageDTO)
-    //{
-    //    Sender = messageDTO.Sender;
-    //    Text = messageDTO.Text;
-    //    TicketId = messageDTO.TicketId;
-    //    Ticket = messageDTO.Ticket;
-    //    Timestamp = DateTime.Now.ToString();
-    //}
-}
 
+    public Message() { }
+
+    public Message(string text, Sender sender, DateTime timestamp, int ticketId, Ticket? ticket)
+    {
+        Text = text;
+        Sender = sender;
+        Timestamp = timestamp.ToString(CultureInfo.CurrentCulture);
+        TicketId = ticketId;
+        Ticket = ticket;
+    }
+}

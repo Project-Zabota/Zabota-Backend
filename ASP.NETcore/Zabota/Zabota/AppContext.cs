@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Zabota.Models;
+using Zabota.Models.Enums;
+
 public class AppContext : DbContext
 {
     public DbSet<Ticket> Tickets { get; set; } = null!;
@@ -8,12 +10,21 @@ public class AppContext : DbContext
 
     public AppContext(DbContextOptions<AppContext> options) : base(options) { }
 
-    //protected override void OnModelCreating(ModelBuilder modelBuilder)
-    //{
-    //    modelBuilder.Entity<Message>()
-    //        .HasOne(t => t.Ticket)
-    //        .WithMany(m => m.Message)
-    //        .HasForeignKey(x => x.TicketId);
-    //}
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Ticket>()
+            .Property(ticket => ticket.Type)
+            .HasConversion<string>();
+        modelBuilder.Entity<Ticket>()
+            .Property(ticket => ticket.Department)
+            .HasConversion<string>();
+        modelBuilder.Entity<Ticket>()
+            .Property(ticket => ticket.Status)
+            .HasConversion<string>();
+        
+        modelBuilder.Entity<Sender>()
+            .Property(ticket => ticket.Type)
+            .HasConversion<string>();
+    }
 }
 

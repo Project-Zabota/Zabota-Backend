@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Zabota.Dtos;
+using Zabota.Models;
 using Zabota.Repositories.Interfaces;
 
 namespace Zabota.Services
@@ -14,9 +16,10 @@ namespace Zabota.Services
             _Tickets = tickets;
             _appContext = appContext;
         }
-        private static Ticket TicketDTOToTicket(TicketDTO ticketDTO)
+        private static Ticket TicketDTOToTicket(TicketDto ticketDTO)
         {
-            return new Ticket(ticketDTO);
+            // return new Ticket(ticketDTO);
+            return null;
         }
         public List<Ticket> GetAllTickets()
         {
@@ -25,7 +28,7 @@ namespace Zabota.Services
 
         public JsonResult GetTicket(int id)
         {
-            return new JsonResult(_appContext.Tickets.Include(m => m.Messages).Where(m => m.Id == id).First());
+            return new JsonResult(_appContext.Tickets.Include(m => m.Messages).First(m => m.Id == id));
         }
 
         public JsonResult PostTicket(Ticket ticket)
