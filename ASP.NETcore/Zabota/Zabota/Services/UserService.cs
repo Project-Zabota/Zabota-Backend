@@ -3,6 +3,8 @@ using Zabota.Repositories.Interfaces;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Zabota.Services
 {
@@ -27,7 +29,7 @@ namespace Zabota.Services
 
         public string GetJWTByUser(User userData)
         {
-            var user = _Users.GetAll().FirstOrDefault(p => p.Email == userData.Email && p.Password == userData.Password);
+            var user = _Users.GetAll().FirstOrDefault(p => p.Email == userData.Email && GetHash(p.Password) == userData.Password);
             if (user == null) { return Results.Unauthorized().ToString(); }
             var claims = new List<Claim> 
             { 
@@ -49,8 +51,16 @@ namespace Zabota.Services
 
         public int SaveUser(User user)
         {
+            user.Password = GetHash(user.Password);
             _Users.Post(user);
             return user.Id;
+        }
+
+        private string GetHash(string password)
+        {
+            var sha256 = SHA256.Create();
+            var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+            return Convert.ToBase64String(hash);
         }
 
         public IResult DeleteUser(int id)
