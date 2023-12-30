@@ -8,25 +8,24 @@ namespace Zabota.Controllers;
 [ApiController]
 public class MessageController : ControllerBase
 {
-    private MessageService MessageService { get; set; }
+    private MessageService _MessageService { get; set; }
 
     public MessageController(MessageService messageService)
     {
-        MessageService = messageService;
+        _MessageService = messageService;
     }
     
     [HttpGet]
     [Route("all/ticket/{id:int}")]
     public IResult GetAllMessagesByTicket(int id)
     {
-        // return _MessageService.GetAllMessagesByTicket(id);
-        return null;
+        return _MessageService.GetAllMessagesByTicket(id);
     }
 
     [HttpPost]
     [Route("add")]
     public IResult AddMessage(MessageDto message)
     {
-        return MessageService.CreateMessage(message);
+        return _MessageService.CreateMessage(message);
     }
 }

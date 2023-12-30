@@ -29,14 +29,15 @@ namespace Zabota.Services
 
         public string GetJWTByUser(User userData)
         {
-            var user = _Users.GetAll().FirstOrDefault(p => p.Email == userData.Email && GetHash(p.Password) == userData.Password);
+            var user = _Users.GetAll().FirstOrDefault(p => p.Email == userData.Email && Equals(p.Password, GetHash(userData.Password)));
             if (user == null) { return Results.Unauthorized().ToString(); }
             var claims = new List<Claim> 
             { 
-                new Claim(ClaimTypes.Email, user.Email), 
-                new Claim(ClaimTypes.Name, user.FirstName), 
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.FirstName),
                 new Claim(ClaimTypes.Surname, user.LastName),
-                new Claim("MiddleName", user.MiddleName)
+                new Claim("MiddleName", user.MiddleName),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
             // создаем JWT-токен
             var jwt = new JwtSecurityToken(

@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Zabota.Dtos;
 using Zabota.Models.Enums;
 using Zabota.Services;
@@ -29,8 +31,7 @@ public class TicketController : ControllerBase
     [Route("all")]
     public List<TicketDto> GetAllTickets()
     {
-        // return _TicketService.GetAllTickets();
-        return null;
+        return _ticketService.GetAllTickets();    
     }
 
     /**
@@ -41,8 +42,7 @@ public class TicketController : ControllerBase
     [Route("{id:int}")]
     public TicketDto GetTicket(int id)
     {
-        // return _TicketService.GetTicket(id);
-        return null;
+        return _ticketService.GetTicketById(id);
     }
 
 
@@ -51,9 +51,9 @@ public class TicketController : ControllerBase
      */
     [HttpPost]
     [Route("{id:int}/status/change")]
-    public void ChangeTicketStatus(int id, TicketStatus status)
+    public void ChangeTicketStatus(int id, [FromForm] TicketStatus status)
     {
-        
+        _ticketService.ChangeTicketStatus(id, status);
     }
 
     /**
@@ -61,9 +61,9 @@ public class TicketController : ControllerBase
      */
     [HttpPost]
     [Route("{id:int}/department/change")]
-    public void ChangeDepartment(int id, [FromBody] Department department)
+    public void ChangeDepartment(int id, [FromForm] Department department)
     {
-        
+        _ticketService.ChangeTicketDepartment(id, department);
     }
 
     /**
@@ -72,10 +72,12 @@ public class TicketController : ControllerBase
      * Устанавливает Worker = данный юзер
      */
     [HttpPost]
-    [Route("{id:int}/start-work")]
-    public void ChangeWorker()
+    [Route("{ticketId:int}/start-work")]
+    [Authorize]
+    public void ChangeWorker(int ticketId)
     {
-        
+        var userId = Convert.ToInt32(HttpContext.User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
+        _ticketService.ChangeTicketUser(ticketId, userId);
     }
     
 }

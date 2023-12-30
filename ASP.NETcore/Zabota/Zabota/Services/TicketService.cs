@@ -9,12 +9,16 @@ namespace Zabota.Services
     public class TicketService
     {
         private IBaseRepository<Ticket> _Tickets { get; set; }
+        private IBaseRepository<User> _Users { get; set; }
         private readonly IMapper<Ticket, TicketDto> ticketMapper;
+        private readonly IMapper<User, UserDto> userMapper;
 
-        public TicketService(IBaseRepository<Ticket> tickets, IMapper<Ticket, TicketDto> ticketMapper)
+        public TicketService(IBaseRepository<Ticket> tickets, IBaseRepository<User> users, IMapper<Ticket, TicketDto> ticketMapper, IMapper<User, UserDto> userMapper)
         {
             _Tickets = tickets;
+            _Users = users;
             this.ticketMapper = ticketMapper;
+            this.userMapper = userMapper;
         }
         
         /**
@@ -23,9 +27,14 @@ namespace Zabota.Services
          * в теории, если не запрашивать messages, то их быть и не должно, но я не уверен
          * возможно при маппинге в dto появятся, но я не уверен
          */
-        public List<Ticket> GetAllTickets()
+        public List<TicketDto> GetAllTickets()
         {
-            return _Tickets.GetAll();
+            return _Tickets.GetAll().ToList().Select(t => ticketMapper.ToDto(t)).ToList();
+        }
+
+        public TicketDto GetTicketById(int id) 
+        {
+            return ticketMapper.ToDto(_Tickets.Get(id));
         }
 
         public int CreateTicket(TicketDto ticketDto)
@@ -37,6 +46,28 @@ namespace Zabota.Services
             return ticket.Id;
         }
 
+        public void ChangeTicketStatus(int id, TicketStatus status) 
+        {
+            var ticket = _Tickets.Get(id);
+            ticket.Status = status;
+            _Tickets.Update(ticket);
+        }
+
+        public void ChangeTicketDepartment(int id, Department department)
+        {
+            var ticket = _Tickets.Get(id);
+            ticket.Department = department;
+            ticket.Worker = null;
+            _Tickets.Update(ticket);
+        }
+
+        public void ChangeTicketUser(int ticketId, int userId)
+        {
+            var ticket = _Tickets.Get(ticketId);
+            var user = _Users.Get(userId);
+            ticket.Worker = user;
+            _Tickets.Update(ticket);
+        }
         /**
          * Не уверен, что нужен такой метод
          *
