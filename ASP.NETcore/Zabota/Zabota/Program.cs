@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -37,7 +38,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddDbContext<AppContext>(options => options.UseNpgsql(connection));
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+        
 
 builder.Services.AddTransient<IBaseRepository<Ticket>, BaseRepository<Ticket>>();
 builder.Services.AddTransient<IBaseRepository<Message>, BaseRepository<Message>>();

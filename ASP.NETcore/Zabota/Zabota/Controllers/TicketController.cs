@@ -61,7 +61,7 @@ public class TicketController : ControllerBase
      */
     [HttpPost]
     [Route("{id:int}/department/change")]
-    public void ChangeDepartment(int id, Department newDepartment)
+    public void ChangeDepartment(int id, [FromBody] Department department)
     {
         
     }

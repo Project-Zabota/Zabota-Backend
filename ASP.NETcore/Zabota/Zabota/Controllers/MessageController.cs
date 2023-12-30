@@ -15,7 +15,6 @@ public class MessageController : ControllerBase
         MessageService = messageService;
     }
     
-
     [HttpGet]
     [Route("all/ticket/{id:int}")]
     public IResult GetAllMessagesByTicket(int id)
