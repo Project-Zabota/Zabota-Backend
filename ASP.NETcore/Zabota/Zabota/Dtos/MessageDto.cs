@@ -8,10 +8,6 @@ public class MessageDto
     public SenderDto Sender { get; set; }
     public DateTime Timestamp { get; set; }
 
-    public MessageDto()
-    {
-    }
-
     public MessageDto(int? id, int ticketId, string text, SenderDto sender, DateTime timestamp)
     {
         Id = id;

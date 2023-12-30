@@ -14,10 +14,4 @@ public class SenderDto
         Type = type;
     }
 
-    public SenderDto(string name, SenderType type, UserDto? user)
-    {
-        Name = name;
-        Type = type;
-        User = user;
-    }
 }

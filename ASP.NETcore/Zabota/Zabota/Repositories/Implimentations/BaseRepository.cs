@@ -11,7 +11,7 @@ namespace Zabota.Repositories.Implimentations
             Context = context;
         }
 
-        public TDbModel Post(TDbModel model)
+        public TDbModel Create(TDbModel model)
         {
             Context.Set<TDbModel>().Add(model);
             Context.SaveChanges();
@@ -30,7 +30,7 @@ namespace Zabota.Repositories.Implimentations
             return Context.Set<TDbModel>().ToList();
         }
 
-        public TDbModel Put(TDbModel model)
+        public TDbModel Update(TDbModel model)
         {
             var toUpdate = Context.Set<TDbModel>().FirstOrDefault(m => m.Id == model.Id);
             if (toUpdate != null)

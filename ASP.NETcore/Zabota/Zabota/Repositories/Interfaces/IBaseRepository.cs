@@ -4,8 +4,8 @@
     {
         public List<TDbModel> GetAll();
         public TDbModel? Get(int id);
-        public TDbModel Post(TDbModel model);
-        public TDbModel Put(TDbModel model);
+        public TDbModel Create(TDbModel model);
+        public TDbModel Update(TDbModel model);
         public void Delete(int id);
     }
 }

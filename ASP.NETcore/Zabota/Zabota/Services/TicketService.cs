@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Zabota.Dtos;
+﻿using Zabota.Dtos;
+using Zabota.Mapper;
 using Zabota.Models;
+using Zabota.Models.Enums;
 using Zabota.Repositories.Interfaces;
 
 namespace Zabota.Services
@@ -9,39 +9,43 @@ namespace Zabota.Services
     public class TicketService
     {
         private IBaseRepository<Ticket> _Tickets { get; set; }
-        private AppContext _appContext;
-        public TicketService(IBaseRepository<Ticket> tickets, AppContext appContext)
+        private readonly IMapper<Ticket, TicketDto> ticketMapper;
+
+        public TicketService(IBaseRepository<Ticket> tickets, IMapper<Ticket, TicketDto> ticketMapper)
         {
-            // _Tickets = ticketsDTO.GetAll().ConvertAll(new Converter<TicketDTO, Ticket>(TicketDTOToTicket));
             _Tickets = tickets;
-            _appContext = appContext;
+            this.ticketMapper = ticketMapper;
         }
-        private static Ticket TicketDTOToTicket(TicketDto ticketDTO)
-        {
-            // return new Ticket(ticketDTO);
-            return null;
-        }
+        
+        /**
+         * Сделать чтобы в тикетах не было messages
+         *
+         * в теории, если не запрашивать messages, то их быть и не должно, но я не уверен
+         * возможно при маппинге в dto появятся, но я не уверен
+         */
         public List<Ticket> GetAllTickets()
         {
             return _Tickets.GetAll();
         }
 
-        public JsonResult GetTicket(int id)
+        public int CreateTicket(TicketDto ticketDto)
         {
-            return new JsonResult(_appContext.Tickets.Include(m => m.Messages).First(m => m.Id == id));
+            ticketDto.Status = TicketStatus.CREATED;
+            var ticket = ticketMapper.ToModel(ticketDto);
+            
+            _Tickets.Create(ticket);
+            return ticket.Id;
         }
 
-        public JsonResult PostTicket(Ticket ticket)
-        {
-            _Tickets.Post(ticket);
-            return new JsonResult(ticket.Id);
-        }
-
-        public IResult PutTicket(Ticket ticket)
+        /**
+         * Не уверен, что нужен такой метод
+         *
+         */
+        public IResult UpdateTicket(Ticket ticket)
         {
             if (ticket != null)
             {
-                return Results.Json(_Tickets.Put(ticket));
+                return Results.Json(_Tickets.Update(ticket));
             }
             return Results.NotFound(new { message = "Заявка не найдена" });
         }

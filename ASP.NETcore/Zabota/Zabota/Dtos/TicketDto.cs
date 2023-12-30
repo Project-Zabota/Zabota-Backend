@@ -13,4 +13,5 @@ public class TicketDto
     public UserDto? Worker { get; set; }
     public int Priority { get; set; }
     public List<MessageDto>? Messages { get; set; } = new();
+
 }

@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Zabota.Dtos;
+using Zabota.Models.Enums;
 using Zabota.Services;
 
 namespace Zabota.Controllers;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/[controller]")]
 public class TicketController : ControllerBase
 {
     private TicketService _ticketService { get; set; }
@@ -13,6 +14,12 @@ public class TicketController : ControllerBase
     public TicketController(TicketService ticketService)
     {
         _ticketService = ticketService;
+    }
+
+    [HttpPost]
+    public int CreateTicket(TicketDto ticket)
+    {
+        return _ticketService.CreateTicket(ticket);
     }
 
     /**
@@ -38,14 +45,37 @@ public class TicketController : ControllerBase
         return null;
     }
 
+
     /**
-     * Создаёт тикет и возвращает id 
+     *  Изменяет статус выбранного тикета на какой-то
      */
     [HttpPost]
-    public JsonResult CreateTicket(TicketDto ticket)
+    [Route("{id:int}/status/change")]
+    public void ChangeTicketStatus(int id, TicketStatus status)
     {
-        // return _TicketService.PostTicket(ticket);
-        return null;
+        
+    }
+
+    /**
+     * Изменяет департамент, а также должен поставить Worker = null в Ticket
+     */
+    [HttpPost]
+    [Route("{id:int}/department/change")]
+    public void ChangeDepartment(int id, Department newDepartment)
+    {
+        
+    }
+
+    /**
+     * можешь роут тут поменять
+     *
+     * Устанавливает Worker = данный юзер
+     */
+    [HttpPost]
+    [Route("{id:int}/start-work")]
+    public void ChangeWorker()
+    {
+        
     }
     
 }

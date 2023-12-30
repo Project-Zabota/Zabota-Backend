@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
+using Zabota.Dtos;
+using Zabota.Mapper;
 using Zabota.Models;
 using Zabota.Models.Enums;
 using Zabota.Repositories.Interfaces;
@@ -10,12 +12,14 @@ namespace Zabota.Services
     {
         private IBaseRepository<Ticket> _Tickets { get; set; }
         private IBaseRepository<Message> _Messages { get; set; }
-        private static readonly HttpClient _Client = new HttpClient();
+        private readonly HttpClient _Client = new ();
+        private readonly IMapper<Message, MessageDto> MessageMapper;
 
-        public MessageService(IBaseRepository<Ticket> ticketRepository, IBaseRepository<Message> messages)
+        public MessageService(IBaseRepository<Ticket> ticketRepository, IBaseRepository<Message> messages, IMapper<Message, MessageDto> messageMapper)
         {
             _Tickets = ticketRepository;
             _Messages = messages;
+            MessageMapper = messageMapper;
         }
 
         public JsonResult GetMessage(int id)
@@ -33,22 +37,25 @@ namespace Zabota.Services
             return Results.NotFound(new { message = "Заявка не найдена" });
         }
 
-        public IResult PostMessage(Message message)
+        public IResult CreateMessage(MessageDto messageDto)
         {
+            var ticket = _Tickets.Get(messageDto.TicketId);
+            if (ticket == null) 
+                return Results.NotFound(new { message = "Заявка не найдена" });
+
+            var message = MessageMapper.ToModel(messageDto);
             
-            var ticket = _Tickets.Get(message.TicketId);
-            if (ticket != null)
+            if (message.Sender.Type.Equals(SenderType.EMPOLYEE_ZABOTA))
             {
-                if (message.Sender.Type.Equals(SenderType.EMPOLYEE_ZABOTA))
-                {
-                    var response = _Client.PostAsync("http://localhost:5000/update", JsonContent.Create("{\"ticket\": " + ticket.Id + ",\"action\": \"NEW_MESSAGE\",\"data\": {\"text\": \"" + message.Text + "\"}}"));
-                }
-                message.Ticket = ticket;
-                message.Timestamp = DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                _Messages.Post(message);
-                return Results.Json("ОК");
+                _Client.PostAsync("http://localhost:5000/update", JsonContent
+                    .Create("{\"ticket\": " + ticket.Id + ",\"action\": \"NEW_MESSAGE\",\"data\": {\"text\": \"" + message.Text + "\"}}"));
             }
-            return Results.NotFound(new { message = "Заявка не найдена" });
+            
+            message.Ticket = ticket;
+            message.Timestamp = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+            _Messages.Create(message);
+            
+            return Results.Json("ОК");
         }
     }
 }

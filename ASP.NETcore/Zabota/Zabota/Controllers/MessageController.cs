@@ -4,27 +4,20 @@ using Zabota.Services;
 
 namespace Zabota.Controllers;
 
+[Route("api/[controller]")]
 [ApiController]
-[Route("api/v1/[controller]")]
 public class MessageController : ControllerBase
 {
-    private MessageService _messageService { get; set; }
+    private MessageService MessageService { get; set; }
 
     public MessageController(MessageService messageService)
     {
-        _messageService = messageService;
+        MessageService = messageService;
     }
+    
 
     [HttpGet]
-    [Route("ticket/message/{id:int}")]
-    public JsonResult GetMessage(int id)
-    {
-        // return _MessageService.GetMessage(id);
-        return null;
-    }
-
-    [HttpGet]
-    [Route("ticket/{id:int}/messages/all")]
+    [Route("all/ticket/{id:int}")]
     public IResult GetAllMessagesByTicket(int id)
     {
         // return _MessageService.GetAllMessagesByTicket(id);
@@ -32,10 +25,9 @@ public class MessageController : ControllerBase
     }
 
     [HttpPost]
-    [Route("ticket/message")]
+    [Route("add")]
     public IResult AddMessage(MessageDto message)
     {
-        // return _MessageService.PostMessage(message);
-        return null;
+        return MessageService.CreateMessage(message);
     }
 }
