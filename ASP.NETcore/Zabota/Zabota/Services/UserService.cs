@@ -1,10 +1,10 @@
-﻿using Zabota.Models;
-using Zabota.Repositories.Interfaces;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Zabota.Models;
+using Zabota.Repositories.Interfaces;
 
 namespace Zabota.Services
 {
@@ -52,7 +52,7 @@ namespace Zabota.Services
         public int SaveUser(User user)
         {
             user.Password = GetHash(user.Password);
-            _Users.Post(user);
+            _Users.Create(user);
             return user.Id;
         }
 
