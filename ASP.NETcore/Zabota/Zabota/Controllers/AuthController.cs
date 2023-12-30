@@ -8,7 +8,7 @@ namespace Zabota.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class AuthController
+    public class AuthController : ControllerBase
     {
         private UserService _userService {  get; set; }
 
