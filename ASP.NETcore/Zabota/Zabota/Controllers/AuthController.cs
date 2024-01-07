@@ -12,9 +12,9 @@ namespace Zabota.Controllers
     {
         private UserService _userService {  get; set; }
 
-        public AuthController(IBaseRepository<User> users) 
+        public AuthController(UserService user) 
         {
-            _userService = new UserService(users);
+            _userService = user;
         }
 
         [Route("login")]

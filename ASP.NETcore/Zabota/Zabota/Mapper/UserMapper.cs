@@ -7,11 +7,11 @@ public class UserMapper : IMapper<User, UserDto>
 {
     public UserDto ToDto(User model)
     {
-        return new UserDto(model.Id, model.FirstName, model.MiddleName, model.LastName, model.Email, null);
+        return new UserDto(model.Id, model.FirstName, model.MiddleName, model.LastName, model.Email, null, model.Department);
     }
 
     public User ToModel(UserDto dto)
     {
-        return new User(dto.FirstName, dto.MiddleName, dto.LastName, dto.Email, dto.Password);
+        return new User(dto.FirstName, dto.MiddleName, dto.LastName, dto.Email, dto.Password, dto.Department);
     }
 }

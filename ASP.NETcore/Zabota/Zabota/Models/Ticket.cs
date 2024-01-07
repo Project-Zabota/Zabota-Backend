@@ -5,6 +5,7 @@ namespace Zabota.Models;
 public class Ticket : BaseModel
 {
     public string Name { get; set; }
+    public string Webhook {  get; set; }
     public TicketType Type { get; set; }
     
     public Department Department { get; set; }

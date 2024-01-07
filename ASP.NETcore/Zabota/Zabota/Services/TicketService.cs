@@ -3,17 +3,18 @@ using Zabota.Mapper;
 using Zabota.Models;
 using Zabota.Models.Enums;
 using Zabota.Repositories.Interfaces;
+using Zabota.Repositories.Implimentations;
 
 namespace Zabota.Services
 {
     public class TicketService
     {
-        private IBaseRepository<Ticket> _Tickets { get; set; }
+        private TicketRepository _Tickets { get; set; }
         private IBaseRepository<User> _Users { get; set; }
         private readonly IMapper<Ticket, TicketDto> ticketMapper;
         private readonly IMapper<User, UserDto> userMapper;
 
-        public TicketService(IBaseRepository<Ticket> tickets, IBaseRepository<User> users, IMapper<Ticket, TicketDto> ticketMapper, IMapper<User, UserDto> userMapper)
+        public TicketService(TicketRepository tickets, IBaseRepository<User> users, IMapper<Ticket, TicketDto> ticketMapper, IMapper<User, UserDto> userMapper)
         {
             _Tickets = tickets;
             _Users = users;
@@ -34,7 +35,12 @@ namespace Zabota.Services
 
         public TicketDto GetTicketById(int id) 
         {
-            return ticketMapper.ToDto(_Tickets.Get(id));
+            return ticketMapper.ToDto(_Tickets.GetTicketWithMessages(id));
+        }
+
+        public List<TicketDto> GetTicketsByUser(int userId)
+        {
+            return _Tickets.GetTicketsFromUser(userId).Select(t => ticketMapper.ToDto(t)).ToList();
         }
 
         public int CreateTicket(TicketDto ticketDto)
@@ -46,7 +52,7 @@ namespace Zabota.Services
             return ticket.Id;
         }
 
-        public void ChangeTicketStatus(int id, TicketStatus status) 
+        public void ChangeTicketStatus(int id, TicketStatus status)
         {
             var ticket = _Tickets.Get(id);
             ticket.Status = status;

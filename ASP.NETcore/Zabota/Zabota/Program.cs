@@ -21,19 +21,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            // указывает, будет ли валидироваться издатель при валидации токена
             ValidateIssuer = true,
-            // строка, представляющая издателя
             ValidIssuer = AuthOptions.ISSUER,
-            // будет ли валидироваться потребитель токена
             ValidateAudience = true,
-            // установка потребителя токена
             ValidAudience = AuthOptions.AUDIENCE,
-            // будет ли валидироваться время существования
             ValidateLifetime = true,
-            // установка ключа безопасности
             IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-            // валидация ключа безопасности
             ValidateIssuerSigningKey = true,
         };
     });
@@ -44,12 +37,13 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
         
 
-builder.Services.AddTransient<IBaseRepository<Ticket>, BaseRepository<Ticket>>();
+builder.Services.AddTransient<TicketRepository, TicketRepository>();
 builder.Services.AddTransient<IBaseRepository<Message>, BaseRepository<Message>>();
 builder.Services.AddTransient<IBaseRepository<User>, BaseRepository<User>>();
 
 builder.Services.AddTransient<TicketService, TicketService>();
 builder.Services.AddTransient<MessageService, MessageService>();
+builder.Services.AddTransient<UserService, UserService>();
 
 builder.Services.AddTransient<IMapper<Sender, SenderDto>, SenderMapper>();
 builder.Services.AddTransient<IMapper<Message, MessageDto>, MessageMapper>();

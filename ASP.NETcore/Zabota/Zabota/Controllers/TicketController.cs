@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Zabota.Dtos;
+using Zabota.Models;
 using Zabota.Models.Enums;
 using Zabota.Services;
 
@@ -31,7 +32,7 @@ public class TicketController : ControllerBase
     [Route("all")]
     public List<TicketDto> GetAllTickets()
     {
-        return _ticketService.GetAllTickets();    
+        return _ticketService.GetAllTickets();
     }
 
     /**
@@ -66,6 +67,17 @@ public class TicketController : ControllerBase
         _ticketService.ChangeTicketDepartment(id, department);
     }
 
+    [HttpGet]
+    [Route("from-user")]
+    [Authorize]
+    public JsonResult GetAllTicketsByUser()
+    {
+        var userId = Convert.ToInt32(HttpContext.User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
+        var a = _ticketService.GetTicketsByUser(userId)[0].Worker;
+        var user = new UserDto(1, "asdf", "asdf", "asdf", "asdf", "asdf", Department.BACK_OFFICE_SUPPORT);
+        var res = new JsonResult(user);
+        return res;
+    }
     /**
      * можешь роут тут поменять
      *

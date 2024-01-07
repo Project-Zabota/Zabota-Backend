@@ -3,6 +3,8 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Zabota.Dtos;
+using Zabota.Mapper;
 using Zabota.Models;
 using Zabota.Repositories.Interfaces;
 
@@ -11,10 +13,12 @@ namespace Zabota.Services
     public class UserService
     {
         private IBaseRepository<User> _Users { get; set; }
+        private IMapper<User, UserDto> _Mapper;
 
-        public UserService(IBaseRepository<User> Users)
+        public UserService(IBaseRepository<User> Users, IMapper<User, UserDto> Mapper)
         {
             _Users = Users;
+            _Mapper = Mapper;
         }
 
         public List<User> GetAllUsers()
@@ -22,9 +26,9 @@ namespace Zabota.Services
             return _Users.GetAll();
         }
 
-        public User GetById(int id)
+        public UserDto GetById(int id)
         {
-            return _Users.Get(id);
+            return _Mapper.ToDto(_Users.Get(id));
         }
 
         public string GetJWTByUser(User userData)
@@ -39,7 +43,6 @@ namespace Zabota.Services
                 new Claim("MiddleName", user.MiddleName),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
-            // создаем JWT-токен
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,

@@ -46,6 +46,7 @@ public class TicketMapper : IMapper<Ticket, TicketDto>
         return new Ticket
         {
             Name = dto.Name,
+            Webhook = dto.Webhook,
             Type = dto.Type,
             Department = dto.Department,
             Status = dto.Status,

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Zabota.Dtos;
 using Zabota.Models;
 using Zabota.Repositories.Interfaces;
 using Zabota.Services;
@@ -12,12 +13,13 @@ namespace Zabota.Controllers
     {
         private UserService _userService { get; set; }
 
-        public UserController(IBaseRepository<User> users)
+        public UserController(UserService user)
         {
-            _userService = new UserService(users);
+            _userService = user;
         }
 
         [HttpPost]
+        [Route("save")]
         public int SaveUser(User user)
         {
             return _userService.SaveUser(user);
@@ -32,8 +34,9 @@ namespace Zabota.Controllers
 
         [Route("{id:int}")]
         [HttpGet]
-        public User GetUser(int id)
+        public UserDto GetUser(int id)
         {
+            var a = _userService.GetById(id);
             return _userService.GetById(id);
         }
 
