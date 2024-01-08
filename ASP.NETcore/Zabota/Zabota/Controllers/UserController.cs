@@ -7,7 +7,7 @@ using Zabota.Services;
 
 namespace Zabota.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -27,7 +27,7 @@ namespace Zabota.Controllers
 
         [Route("all")]
         [HttpGet]
-        public List<User> GetAllUsers()
+        public List<UserDto> GetAllUsers()
         {
             return _userService.GetAllUsers();
         }

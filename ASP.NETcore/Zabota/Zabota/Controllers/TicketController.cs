@@ -70,13 +70,10 @@ public class TicketController : ControllerBase
     [HttpGet]
     [Route("from-user")]
     [Authorize]
-    public JsonResult GetAllTicketsByUser()
+    public List<TicketDto> GetAllTicketsByUser()
     {
         var userId = Convert.ToInt32(HttpContext.User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
-        var a = _ticketService.GetTicketsByUser(userId)[0].Worker;
-        var user = new UserDto(1, "asdf", "asdf", "asdf", "asdf", "asdf", Department.BACK_OFFICE_SUPPORT);
-        var res = new JsonResult(user);
-        return res;
+        return _ticketService.GetTicketsByUser(userId);
     }
     /**
      * можешь роут тут поменять

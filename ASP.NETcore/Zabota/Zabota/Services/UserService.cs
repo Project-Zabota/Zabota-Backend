@@ -13,22 +13,22 @@ namespace Zabota.Services
     public class UserService
     {
         private IBaseRepository<User> _Users { get; set; }
-        private IMapper<User, UserDto> _Mapper;
+        private IMapper<User, UserDto> _UserMapper;
 
         public UserService(IBaseRepository<User> Users, IMapper<User, UserDto> Mapper)
         {
             _Users = Users;
-            _Mapper = Mapper;
+            _UserMapper = Mapper;
         }
 
-        public List<User> GetAllUsers()
+        public List<UserDto> GetAllUsers()
         {
-            return _Users.GetAll();
+            return _Users.GetAll().ToList().Select(t => _UserMapper.ToDto(t)).ToList();
         }
 
         public UserDto GetById(int id)
         {
-            return _Mapper.ToDto(_Users.Get(id));
+            return _UserMapper.ToDto(_Users.Get(id));
         }
 
         public string GetJWTByUser(User userData)

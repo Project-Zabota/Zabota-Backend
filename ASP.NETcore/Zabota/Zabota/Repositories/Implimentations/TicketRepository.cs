@@ -2,6 +2,7 @@
 using Zabota.Dtos;
 using Zabota.Mapper;
 using Zabota.Models;
+using Zabota.Models.Enums;
 
 namespace Zabota.Repositories.Implimentations
 {
@@ -15,7 +16,11 @@ namespace Zabota.Repositories.Implimentations
 
         public List<Ticket> GetTicketsFromUser(int userId)
         {
-            return Context.Tickets.Include(t => t.Worker).Where(u => u.Worker.Id == userId).ToList();
+            var user = Context.Users.FirstOrDefault(u => u.Id == userId);
+            return Context.Tickets.Include(t => t.Worker)
+                .Where(u => u.Worker.Id == userId)
+                .Where(t => (t.Status == TicketStatus.IN_WORK && t.Worker.Department == user.Department) || t.Status == TicketStatus.CREATED || t.Status == TicketStatus.CLOSED)
+                .ToList();
         }
 
         public Ticket GetTicketWithMessages(int ticketId)
