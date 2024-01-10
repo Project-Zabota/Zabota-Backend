@@ -31,18 +31,23 @@ namespace Zabota.Services
             return _UserMapper.ToDto(_Users.Get(id));
         }
 
-        public string GetJWTByUser(User userData)
+        public string GetJWTByUser(UserDto userData)
         {
             var user = _Users.GetAll().FirstOrDefault(p => p.Email == userData.Email && Equals(p.Password, GetHash(userData.Password)));
-            if (user == null) { return Results.Unauthorized().ToString(); }
+            if (user == null)
+            {
+                throw new ArgumentException();
+            }
+
             var claims = new List<Claim> 
             { 
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.FirstName),
-                new Claim(ClaimTypes.Surname, user.LastName),
-                new Claim("MiddleName", user.MiddleName),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                new("id", user.Id.ToString()),
+                new("email", user.Email),
+                new("firstname", user.FirstName),
+                new("lastname", user.LastName),
+                new("middlename", user.MiddleName)
             };
+            
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,

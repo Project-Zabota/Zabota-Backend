@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Zabota.Models;
-using Zabota.Repositories.Interfaces;
+using Zabota.Dtos;
 using Zabota.Services;
 
 namespace Zabota.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -19,9 +18,16 @@ namespace Zabota.Controllers
 
         [Route("login")]
         [HttpPost]
-        public string GetJWT(User user)
+        public IActionResult  GetJWT(UserDto user)
         {
-            return _userService.GetJWTByUser(user);
+            try
+            {
+                return Ok(_userService.GetJWTByUser(user));
+            }
+            catch(ArgumentException e)
+            {
+                return BadRequest();
+            }
         }
 
         [Route("data")]

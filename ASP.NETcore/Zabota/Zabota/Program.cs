@@ -36,7 +36,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
         
-
 builder.Services.AddTransient<TicketRepository, TicketRepository>();
 builder.Services.AddTransient<IBaseRepository<Message>, BaseRepository<Message>>();
 builder.Services.AddTransient<IBaseRepository<User>, BaseRepository<User>>();
@@ -53,6 +52,13 @@ builder.Services.AddTransient<IMapper<User, UserDto>, UserMapper>();
 var app = builder.Build();
 
 app.MapGet("/", () => "ok");
+
+app.UseCors(b =>
+{
+    b.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+});
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
