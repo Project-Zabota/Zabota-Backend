@@ -16,9 +16,9 @@ namespace Zabota.Repositories.Implimentations
         {
             var user = Context.Users.FirstOrDefault(u => u.Id == userId);
             return Context.Tickets.Include(t => t.Worker)
-                .Where(t => t.Worker.Department == user.Department && 
+                .Where(t => user.Department == t.Department && 
                             (t.Worker.Id == userId && 
-                                t.Status == TicketStatus.IN_WORK || t.Status == TicketStatus.CLOSED
+                                (t.Status == TicketStatus.IN_WORK || t.Status == TicketStatus.CLOSED)
                             || t.Status == TicketStatus.CREATED))
                 .ToList();
         }
