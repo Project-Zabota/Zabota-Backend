@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Zabota.Dtos;
-using Zabota.Mapper;
 using Zabota.Models;
 using Zabota.Models.Enums;
 
@@ -18,8 +16,10 @@ namespace Zabota.Repositories.Implimentations
         {
             var user = Context.Users.FirstOrDefault(u => u.Id == userId);
             return Context.Tickets.Include(t => t.Worker)
-                .Where(u => u.Worker.Id == userId)
-                .Where(t => (t.Status == TicketStatus.IN_WORK && t.Worker.Department == user.Department) || t.Status == TicketStatus.CREATED || t.Status == TicketStatus.CLOSED)
+                .Where(t => t.Worker.Department == user.Department && 
+                            (t.Worker.Id == userId && 
+                                t.Status == TicketStatus.IN_WORK || t.Status == TicketStatus.CLOSED
+                            || t.Status == TicketStatus.CREATED))
                 .ToList();
         }
 
