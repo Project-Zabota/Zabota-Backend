@@ -1,8 +1,7 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Zabota.Dtos;
-using Zabota.Models;
 using Zabota.Models.Enums;
 using Zabota.Services;
 
@@ -68,11 +67,11 @@ public class TicketController : ControllerBase
     }
 
     [HttpGet]
-    [Route("from-user")]
+    [Route("all/by/user")]
     [Authorize]
     public List<TicketDto> GetAllTicketsByUser()
     {
-        var userId = Convert.ToInt32(HttpContext.User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value);
+        var userId = Convert.ToInt32(HttpContext.User.Claims.First(x => x.Type == "id").Value);
         return _ticketService.GetTicketsByUser(userId);
     }
     /**

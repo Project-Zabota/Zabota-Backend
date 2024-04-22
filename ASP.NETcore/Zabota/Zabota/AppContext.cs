@@ -24,6 +24,10 @@ public class AppContext : DbContext
         modelBuilder.Entity<Sender>()
             .Property(ticket => ticket.Type)
             .HasConversion<string>();
+        
+        modelBuilder.Entity<User>()
+            .Property(ticket => ticket.Department)
+            .HasConversion<string>();
     }
 }
 
