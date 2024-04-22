@@ -1,4 +1,5 @@
-﻿using Zabota.Models.Enums;
+﻿using Microsoft.EntityFrameworkCore;
+using Zabota.Models.Enums;
 
 namespace Zabota.Models;
 
